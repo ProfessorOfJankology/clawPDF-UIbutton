@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.6.33513.286
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clawPDF", "src\clawPDF\clawPDF.csproj", "{28A624EA-10C1-4178-BB3A-6A2BB6AA159D}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PrinterMonitor", "PrinterMonitor", "{59DE0A31-E895-49BD-8455-C9117E727177}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Printer", "Printer", "{10E1C86E-25C5-4C22-9FE7-4C505F39B266}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{75F9640A-9703-4915-AB3D-EF261F965179}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
