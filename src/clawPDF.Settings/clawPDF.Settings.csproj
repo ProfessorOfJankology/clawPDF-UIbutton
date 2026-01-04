@@ -118,6 +118,8 @@
     <Compile Include="OCRSettings.cs" />
     <Compile Include="TiffSettings.cs" />
     <Compile Include="TitleReplacement.cs" />
+	<Compile Include="UIActionButtonSettings.cs" />
+	<Compile Include="Enums\UIActionButtonMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="settings.xml">

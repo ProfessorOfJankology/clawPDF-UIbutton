@@ -2,7 +2,7 @@ namespace clawSoft.clawPDF.Core.Settings.Enums
 {
     public enum UIActionButtonMode
     {
-        DefaultEmailButton = 0,
-        CustomAction = 1
+        Email = 0,
+        Action = 1
     }
 }
