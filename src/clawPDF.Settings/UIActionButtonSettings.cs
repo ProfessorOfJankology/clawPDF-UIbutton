@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using clawSoft.clawPDF.Core.Settings.Enums;
 using pdfforge.DataStorage;
@@ -30,7 +31,18 @@ namespace clawSoft.clawPDF.Core.Settings
         {
             try
             {
-                Mode = (UIActionButtonMode)int.Parse(data.GetValue(@"" + path + @"Mode"));
+                var modeValue = data.GetValue(@"" + path + @"Mode");
+                if (!string.IsNullOrWhiteSpace(modeValue) && modeValue.Contains("."))
+                    modeValue = modeValue.Substring(modeValue.LastIndexOf(".", StringComparison.Ordinal) + 1);
+                if (!Enum.TryParse(modeValue, out UIActionButtonMode parsedMode))
+                {
+                    if (int.TryParse(modeValue, out var modeInt))
+                        parsedMode = (UIActionButtonMode)modeInt;
+                    else
+                        parsedMode = UIActionButtonMode.Email;
+                }
+
+                Mode = parsedMode;
             }
             catch
             {
@@ -58,7 +70,7 @@ namespace clawSoft.clawPDF.Core.Settings
 
         public void StoreValues(Data data, string path)
         {
-            data.SetValue(@"" + path + @"Mode", ((int)Mode).ToString());
+            data.SetValue(@"" + path + @"Mode", Mode.ToString());
             data.SetValue(@"" + path + @"Label", Data.EscapeString(Label));
             data.SetValue(@"" + path + @"ProfileGuid", Data.EscapeString(ProfileGuid));
         }

@@ -22,6 +22,7 @@ namespace clawSoft.clawPDF.Views
         {
             GeneralTabUserControl.ViewModel.ApplicationSettings = applicationSettings;
             GeneralTabUserControl.ViewModel.ApplicationProperties = applicationProperties;
+            GeneralTabUserControl.ViewModel.ConversionProfiles = conversionProfiles;
             GeneralTabUserControl.PreviewLanguageAction = PreviewLanguageAction;
             TitleTabUserControl.ViewModel.ApplyTitleReplacements(applicationSettings.TitleReplacement);
             DebugTabUserControl.ViewModel.ApplicationSettings = applicationSettings;
@@ -36,6 +37,7 @@ namespace clawSoft.clawPDF.Views
         {
             GeneralTabUserControl.ViewModel.ApplicationSettings = settings.ApplicationSettings;
             GeneralTabUserControl.ViewModel.ApplicationProperties = settings.ApplicationProperties;
+            GeneralTabUserControl.ViewModel.ConversionProfiles = settings.ConversionProfiles;
             TitleTabUserControl.ViewModel.ApplyTitleReplacements(settings.ApplicationSettings.TitleReplacement);
             PrinterTabUserControl.ViewModel.ConversionProfiles = settings.ConversionProfiles;
             PrinterTabUserControl.ViewModel.ApplicationSettings = settings.ApplicationSettings;
