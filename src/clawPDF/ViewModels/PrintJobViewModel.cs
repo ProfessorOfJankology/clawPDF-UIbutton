@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Threading;
+using System.Windows;
 
 namespace clawSoft.clawPDF.ViewModels
 {
@@ -22,8 +23,19 @@ namespace clawSoft.clawPDF.ViewModels
         private ApplicationSettings _applicationSettings;
         private IJobInfo _jobInfo;
         private IList<ConversionProfile> _profiles;
-        public string ActionButtonLabel { get; }
+        public string ActionButtonLabel =>
+            ApplicationSettings.UIActionButton.Mode == UIActionButtonMode.Email
+                ? "E-Mail"
+                : (string.IsNullOrWhiteSpace(ApplicationSettings.UIActionButton.Label)
+                    ? "Action"
+                    : ApplicationSettings.UIActionButton.Label);
         public string ActionButtonProfileGuid { get; }
+        public DelegateCommand ActionButtonCommand =>
+            ApplicationSettings.UIActionButton.Mode == UIActionButtonMode.Email
+                ? EmailCommand
+                : ActionCommand;
+        public object ActionButtonIcon =>
+            Application.Current.FindResource("Share");
 
         public PrintJobViewModel(ApplicationSettings appSettings, IList<ConversionProfile> profiles,
             IJobInfoQueue jobInfoQueue, ConversionProfile preselectedProfile = null, IJobInfo jobInfo = null,
@@ -37,18 +49,6 @@ namespace clawSoft.clawPDF.ViewModels
             ApplicationSettings = appSettings;
 
             ActionButtonProfileGuid = ApplicationSettings.UIActionButton.ProfileGuid;
-
-            if (ApplicationSettings.UIActionButton.Mode == UIActionButtonMode.Email)
-            {
-                ActionButtonLabel = "E-Mail";
-            }
-            else
-            {
-                ActionButtonLabel =
-                    string.IsNullOrWhiteSpace(ApplicationSettings.UIActionButton.Label)
-                        ? "Action"
-                        : ApplicationSettings.UIActionButton.Label;
-            }
 
 
             _jobInfoQueue = jobInfoQueue;

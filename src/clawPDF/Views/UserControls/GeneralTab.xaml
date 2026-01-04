@@ -14,6 +14,8 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Disabled">
     <StackPanel>
         <HeaderedContentControl Name="LanguageControl" Template="{StaticResource HeaderPanelTemplate}"
                                 Header="Language">
@@ -70,5 +72,43 @@
                           ItemsSource="{Binding AskSwitchPrinterValues}" Height="24" />
             </StackPanel>
         </HeaderedContentControl>
+
+        <HeaderedContentControl Name="ActionButtonControl" Margin="0 10 0 0"
+                                Template="{StaticResource HeaderPanelTemplate}" Header="Action button">
+            <StackPanel>
+                <Label>
+                    <TextBlock Name="ActionButtonControlText" TextWrapping="Wrap">Configure the behavior of the action button:</TextBlock>
+                </Label>
+                <StackPanel>
+                    <RadioButton Name="ActionButtonDefaultEmailRadio" GroupName="ActionButtonMode"
+                                 IsChecked="{Binding ActionButtonUsesDefaultEmail, Mode=TwoWay}"
+                                 Content="Use default email behavior" />
+                    <RadioButton Name="ActionButtonCustomRadio" GroupName="ActionButtonMode"
+                                 IsChecked="{Binding ActionButtonUsesCustom, Mode=TwoWay}"
+                                 Content="Custom action" />
+                </StackPanel>
+                <StackPanel Margin="20 5 0 0"
+                Visibility="{Binding ActionButtonCustomOptionsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                IsEnabled="{Binding ActionButtonCustomOptionsEnabled}">
+                    <Label>
+                        <TextBlock Name="ActionButtonLabelText" TextWrapping="Wrap">Button label:</TextBlock>
+                    </Label>
+                    <TextBox Name="ActionButtonLabelTextBox"
+                             Text="{Binding ActionButtonLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Width="200" HorizontalAlignment="Left" Height="24"
+                             Foreground="{StaticResource ControlDefaultForeground}"
+                             Background="{StaticResource ContainerBackground}" />
+                    <Label Margin="0 5 0 0">
+                        <TextBlock Name="ActionButtonProfileText" TextWrapping="Wrap">Profile to run:</TextBlock>
+                    </Label>
+                    <ComboBox Name="ActionButtonProfileComboBox" Width="200" Height="24"
+                              HorizontalAlignment="Left" DisplayMemberPath="Name"
+                              SelectedValuePath="Guid"
+                              SelectedValue="{Binding ActionButtonProfileGuid, Mode=TwoWay}"
+                              ItemsSource="{Binding ActionButtonProfiles}" />
+                </StackPanel>
+            </StackPanel>
+        </HeaderedContentControl>
     </StackPanel>
+    </ScrollViewer>
 </UserControl>

@@ -1606,7 +1606,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Core, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Core, Version=0.9.3.1, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_077D86EFCA200ED740A022D2ED44DAD5"

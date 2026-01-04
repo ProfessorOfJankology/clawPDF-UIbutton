@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using clawSoft.clawPDF.Core.Settings.Enums;
 using pdfforge.DataStorage;
@@ -23,14 +24,25 @@ namespace clawSoft.clawPDF.Core.Settings
         {
             Mode = UIActionButtonMode.Email;
             Label = "";
-            ProfileGuid = "DefaultGuid";
+            ProfileGuid = ProfileGuids.DEFAULT_PROFILE_GUID;
         }
 
         public void ReadValues(Data data, string path)
         {
             try
             {
-                Mode = (UIActionButtonMode)int.Parse(data.GetValue(@"" + path + @"Mode"));
+                var modeValue = data.GetValue(@"" + path + @"Mode");
+                if (!string.IsNullOrWhiteSpace(modeValue) && modeValue.Contains("."))
+                    modeValue = modeValue.Substring(modeValue.LastIndexOf(".", StringComparison.Ordinal) + 1);
+                if (!Enum.TryParse(modeValue, out UIActionButtonMode parsedMode))
+                {
+                    if (int.TryParse(modeValue, out var modeInt))
+                        parsedMode = (UIActionButtonMode)modeInt;
+                    else
+                        parsedMode = UIActionButtonMode.Email;
+                }
+
+                Mode = parsedMode;
             }
             catch
             {
@@ -48,19 +60,23 @@ namespace clawSoft.clawPDF.Core.Settings
 
             try
             {
-                ProfileGuid = Data.UnescapeString(data.GetValue(@"" + path + @"ProfileGuid"));
+                var pg = Data.UnescapeString(data.GetValue(@"" + path + @"ProfileGuid"));
+                ProfileGuid = string.IsNullOrWhiteSpace(pg) ? ProfileGuids.DEFAULT_PROFILE_GUID : pg;
             }
             catch
             {
-                ProfileGuid = "DefaultGuid";
+                ProfileGuid = ProfileGuids.DEFAULT_PROFILE_GUID;
             }
+
         }
 
         public void StoreValues(Data data, string path)
         {
-            data.SetValue(@"" + path + @"Mode", ((int)Mode).ToString());
+            data.SetValue(@"" + path + @"Mode", Mode.ToString());
             data.SetValue(@"" + path + @"Label", Data.EscapeString(Label));
-            data.SetValue(@"" + path + @"ProfileGuid", Data.EscapeString(ProfileGuid));
+var pg = string.IsNullOrWhiteSpace(ProfileGuid) ? ProfileGuids.DEFAULT_PROFILE_GUID : ProfileGuid;
+data.SetValue(@"" + path + @"ProfileGuid", Data.EscapeString(pg));
+
         }
 
         public UIActionButtonSettings Copy()
@@ -96,8 +112,15 @@ namespace clawSoft.clawPDF.Core.Settings
 
         public override int GetHashCode()
         {
-            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
-            return base.GetHashCode();
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 23 + Mode.GetHashCode();
+                hash = hash * 23 + (Label?.GetHashCode() ?? 0);
+                hash = hash * 23 + (ProfileGuid?.GetHashCode() ?? 0);
+                return hash;
+            }
         }
+
     }
 }
