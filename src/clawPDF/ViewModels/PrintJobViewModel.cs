@@ -37,6 +37,7 @@ namespace clawSoft.clawPDF.ViewModels
 
             SaveCommand = new DelegateCommand(ExecuteSave);
             EmailCommand = new DelegateCommand(ExecuteMail);
+            ActionCommand = new DelegateCommand(ExecuteAction);
             ManagePrintJobsCommand = new DelegateCommand(ExecuteManagePrintJobs);
 
             if (jobInfo != null) JobInfo = jobInfo;
@@ -156,7 +157,13 @@ namespace clawSoft.clawPDF.ViewModels
             ApplicationSettings.LastUsedProfileGuid = SelectedProfile.Guid;
             PrintJobAction = PrintJobAction.EMail;
         }
+        private void ExecuteAction(object obj)
+        {
+            JobInfo.Metadata = Metadata;
 
+            ApplicationSettings.LastUsedProfileGuid = SelectedProfile.Guid;
+            PrintJobAction = PrintJobAction.Action;
+        }
         private void ExecuteManagePrintJobs(object obj)
         {
             PrintJobAction = PrintJobAction.ManagePrintJobs;
@@ -189,6 +196,7 @@ namespace clawSoft.clawPDF.ViewModels
         Cancel,
         Save,
         EMail,
-        ManagePrintJobs
+        ManagePrintJobs,
+        Action
     }
 }
