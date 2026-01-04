@@ -75,6 +75,7 @@ namespace clawSoft.clawPDF.ViewModels.UserControls
             {
                 _conversionProfiles = value ?? Enumerable.Empty<ConversionProfile>();
                 RaisePropertyChanged(nameof(ActionButtonProfiles));
+                RaisePropertyChanged(nameof(ConversionProfiles));
             }
         }
 
@@ -128,10 +129,12 @@ namespace clawSoft.clawPDF.ViewModels.UserControls
             set
             {
                 EnsureActionButtonSettings();
-                ApplicationSettings.UIActionButton.ProfileGuid = value ?? string.Empty;
+                ApplicationSettings.UIActionButton.ProfileGuid =
+                    string.IsNullOrWhiteSpace(value) ? ProfileGuids.DEFAULT_PROFILE_GUID : value;
                 RaisePropertyChanged(nameof(ActionButtonProfileGuid));
             }
         }
+
 
         protected override void OnSettingsChanged(EventArgs e)
         {
