@@ -117,11 +117,52 @@
                     </Viewbox>
                 </Button>
 
-                <Button Style="{StaticResource GrayRoundButtonStyle}" Command="{Binding EmailCommand}"
-                        Click="CommandButtons_OnClick">
-                    <Path Data="{StaticResource Share}" Width="20" Height="20" Stretch="Fill" Fill="{StaticResource ControlDefaultForeground}"
-                          StrokeThickness="5" Margin="12 10 8 10" />
-                </Button>
+                <Grid>
+                    <!-- EMAIL button -->
+                    <Button Command="{Binding EmailCommand}"
+                            Click="CommandButtons_OnClick">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GrayRoundButtonStyle}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ActionButtonMode}" Value="Email">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+
+                        <Path Data="{StaticResource Share}"
+                              Width="20" Height="20"
+                              Stretch="Fill"
+                              Fill="{StaticResource ControlDefaultForeground}"
+                              StrokeThickness="5"
+                              Margin="12 10 8 10" />
+                    </Button>
+
+
+                    <!-- ACTION button -->
+                    <Button Command="{Binding ActionCommand}"
+                            Click="CommandButtons_OnClick">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource GrayRoundButtonStyle}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ActionButtonMode}" Value="Action">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+
+                        <Viewbox Margin="9">
+                            <ContentControl Foreground="White"
+                                            Content="{StaticResource ImageSettings}" />
+                        </Viewbox>
+                    </Button>
+
+                </Grid>
+                
                 <Button Style="{StaticResource GrayRoundButtonStyle}" IsDefault="True" Command="{Binding SaveCommand}"
                         Click="CommandButtons_OnClick">
                     <Viewbox Margin="9">
@@ -140,7 +181,7 @@
                 <Label Name="CancelLabel">Cancel</Label>
                 <Label Name="SettingsLabel">Settings</Label>
                 <Label Name="MergeJobsLabel">Merge</Label>
-                <Label Name="EmailLabel">E-Mail</Label>
+                <Label Name="EmailLabel" Content="{Binding ActionButtonLabel}" />
                 <Label Name="SaveLabel">Save</Label>
             </StackPanel>
         </StackPanel>

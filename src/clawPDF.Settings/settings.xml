@@ -85,7 +85,24 @@
 					   defaultvalue="UpdateInterval.Weekly">
 					<comment />
 				</value>
+				<class name="UIActionButtonSettings" propertyName="UIActionButton" readonly="False" classtype="Class">
+					<comment>Settings for the configurable Action button in the UI</comment>
+
+					<value name="Mode" type="value" datatype="Enum" enumname="UIActionButtonMode"
+						   defaultvalue="UIActionButtonMode.Email">
+						<comment />
+					</value>
+
+					<value name="Label" type="value" datatype="String" enumname="" defaultvalue="">
+						<comment>Only used when Mode == Action</comment>
+					</value>
+
+					<value name="ProfileGuid" type="value" datatype="String" enumname="" defaultvalue="DefaultGuid">
+						<comment>Profile GUID to auto-run</comment>
+					</value>
+				</class>
 			</class>
+
 			<classarray name="ConversionProfile" propertyName="ConversionProfiles" readonly="False" classtype="Class">
 				<comment />
 				<class name="AttachmentPage" propertyName="AttachmentPage" readonly="False" classtype="Class">

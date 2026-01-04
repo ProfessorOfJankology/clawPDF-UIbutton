@@ -1,13 +1,15 @@
-﻿using System;
+﻿using clawSoft.clawPDF.Core.Jobs;
+using clawSoft.clawPDF.Core.Settings;
+using clawSoft.clawPDF.Core.Settings.Enums;
+using clawSoft.clawPDF.Helper;
+using clawSoft.clawPDF.Properties;
+using clawSoft.clawPDF.Shared.Helper;
+using clawSoft.clawPDF.Shared.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Threading;
-using clawSoft.clawPDF.Core.Jobs;
-using clawSoft.clawPDF.Core.Settings;
-using clawSoft.clawPDF.Helper;
-using clawSoft.clawPDF.Shared.Helper;
-using clawSoft.clawPDF.Shared.ViewModels;
 
 namespace clawSoft.clawPDF.ViewModels
 {
@@ -20,6 +22,8 @@ namespace clawSoft.clawPDF.ViewModels
         private ApplicationSettings _applicationSettings;
         private IJobInfo _jobInfo;
         private IList<ConversionProfile> _profiles;
+        public string ActionButtonLabel { get; }
+        public string ActionButtonProfileGuid { get; }
 
         public PrintJobViewModel(ApplicationSettings appSettings, IList<ConversionProfile> profiles,
             IJobInfoQueue jobInfoQueue, ConversionProfile preselectedProfile = null, IJobInfo jobInfo = null,
@@ -32,11 +36,27 @@ namespace clawSoft.clawPDF.ViewModels
             //must be set before ApplicationSettings because it is evaluated in the Set method of appsettings.
             ApplicationSettings = appSettings;
 
+            ActionButtonProfileGuid = ApplicationSettings.UIActionButton.ProfileGuid;
+
+            if (ApplicationSettings.UIActionButton.Mode == UIActionButtonMode.Email)
+            {
+                ActionButtonLabel = "E-Mail";
+            }
+            else
+            {
+                ActionButtonLabel =
+                    string.IsNullOrWhiteSpace(ApplicationSettings.UIActionButton.Label)
+                        ? "Action"
+                        : ApplicationSettings.UIActionButton.Label;
+            }
+
+
             _jobInfoQueue = jobInfoQueue;
             _jobInfoQueue.OnNewJobInfo += NewJobInfo;
 
             SaveCommand = new DelegateCommand(ExecuteSave);
             EmailCommand = new DelegateCommand(ExecuteMail);
+            ActionCommand = new DelegateCommand(ExecuteAction);
             ManagePrintJobsCommand = new DelegateCommand(ExecuteManagePrintJobs);
 
             if (jobInfo != null) JobInfo = jobInfo;
@@ -50,7 +70,7 @@ namespace clawSoft.clawPDF.ViewModels
                 preselectedProfile)
         {
         }
-
+        
         public PrintJobViewModel()
             : this(JobInfoQueue.Instance)
         {
@@ -74,9 +94,10 @@ namespace clawSoft.clawPDF.ViewModels
         public Metadata Metadata { get; set; }
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand EmailCommand { get; }
+        public DelegateCommand ActionCommand { get; }
         public DelegateCommand ManagePrintJobsCommand { get; }
 
-        public IJobInfo JobInfo
+         public IJobInfo JobInfo
         {
             get => _jobInfo;
             private set
@@ -156,7 +177,13 @@ namespace clawSoft.clawPDF.ViewModels
             ApplicationSettings.LastUsedProfileGuid = SelectedProfile.Guid;
             PrintJobAction = PrintJobAction.EMail;
         }
+        private void ExecuteAction(object obj)
+        {
+            JobInfo.Metadata = Metadata;
 
+            ApplicationSettings.LastUsedProfileGuid = SelectedProfile.Guid;
+            PrintJobAction = PrintJobAction.Action;
+        }
         private void ExecuteManagePrintJobs(object obj)
         {
             PrintJobAction = PrintJobAction.ManagePrintJobs;
@@ -189,6 +216,7 @@ namespace clawSoft.clawPDF.ViewModels
         Cancel,
         Save,
         EMail,
-        ManagePrintJobs
+        ManagePrintJobs,
+        Action
     }
 }

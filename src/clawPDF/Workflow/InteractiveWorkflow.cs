@@ -71,6 +71,32 @@ namespace clawSoft.clawPDF.Workflow
                 Job.Profile = model.SelectedProfile.Copy();
                 Job.ApplyMetadata();
 
+                if (model.PrintJobAction == PrintJobAction.Action)
+                {
+                    if (string.IsNullOrWhiteSpace(model.ActionButtonProfileGuid))
+                    {
+                        Logger.Error("Action button requested RunProfile but no profile GUID was configured. Aborting job.");
+                        Cancel = true;
+                        WorkflowStep = WorkflowStep.AbortedByUser;
+                        return;
+                    }
+                    Job.Profile = Settings.GetProfileByGuid(model.ActionButtonProfileGuid);
+                    
+                    if (Job.Profile == null)
+                    {
+                        Logger.Error(
+                            "Action button requested profile GUID {0}, but it was not found. Aborting job.",
+                            model.ActionButtonProfileGuid);
+
+                        Cancel = true;
+                        WorkflowStep = WorkflowStep.AbortedByUser;
+                        return;
+                    }
+                    Logger.Debug(
+                    "Action button run: using profile '{0}' (GUID {1})",
+                    Job.Profile.Name,
+                    Job.Profile.Guid);
+                }
                 if (model.PrintJobAction == PrintJobAction.EMail)
                 {
                     Job.SkipSaveFileDialog = true;
@@ -330,11 +356,6 @@ namespace clawSoft.clawPDF.Workflow
                 return true;
             }
 
-            if (!string.IsNullOrEmpty(Job.Profile.EmailSmtp.Password))
-            {
-                Job.Passwords.SmtpPassword = Job.Profile.EmailSmtp.Password;
-                return true;
-            }
 
             var pwWindow = new SmtpPasswordWindow(SmtpPasswordMiddleButton.Skip, Job.Profile.EmailSmtp.Address, recipient);
 

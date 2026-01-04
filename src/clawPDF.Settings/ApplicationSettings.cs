@@ -58,6 +58,7 @@ namespace clawSoft.clawPDF.Core.Settings
             Theme = Theme.System;
             PrimaryPrinter = "clawPDF";
             UpdateInterval = UpdateInterval.Weekly;
+            UIActionButton = new UIActionButtonSettings();
         }
 
         public void ReadValues(Data data, string path)
@@ -178,6 +179,16 @@ namespace clawSoft.clawPDF.Core.Settings
             {
                 UpdateInterval = UpdateInterval.Weekly;
             }
+
+            try
+            {
+                UIActionButton = new UIActionButtonSettings();
+                UIActionButton.ReadValues(data, @"" + path + @"UIActionButton\");
+            }
+            catch
+            {
+                UIActionButton = new UIActionButtonSettings();
+            }
         }
 
         public void StoreValues(Data data, string path)
@@ -214,6 +225,10 @@ namespace clawSoft.clawPDF.Core.Settings
             data.SetValue(@"" + path + @"Theme", Theme.ToString());
             data.SetValue(@"" + path + @"PrimaryPrinter", Data.EscapeString(PrimaryPrinter));
             data.SetValue(@"" + path + @"UpdateInterval", UpdateInterval.ToString());
+            if (UIActionButton == null)
+                UIActionButton = new UIActionButtonSettings();
+
+            UIActionButton.StoreValues(data, @"" + path + @"UIActionButton\");
         }
 
         public ApplicationSettings Copy()
@@ -237,6 +252,8 @@ namespace clawSoft.clawPDF.Core.Settings
             copy.Theme = Theme;
             copy.PrimaryPrinter = PrimaryPrinter;
             copy.UpdateInterval = UpdateInterval;
+            copy.UIActionButton = UIActionButton?.Copy() ?? new UIActionButtonSettings();
+
 
             return copy;
         }
@@ -269,9 +286,14 @@ namespace clawSoft.clawPDF.Core.Settings
             if (!LoggingLevel.Equals(v.LoggingLevel)) return false;
             if (!PrimaryPrinter.Equals(v.PrimaryPrinter)) return false;
             if (!UpdateInterval.Equals(v.UpdateInterval)) return false;
+            if (UIActionButton == null && v.UIActionButton != null) return false;
+            if (UIActionButton != null && !UIActionButton.Equals(v.UIActionButton)) return false;
+
 
             return true;
         }
+
+        public UIActionButtonSettings UIActionButton { get; set; }
 
         public override string ToString()
         {
